@@ -73,9 +73,10 @@
       background-color: #CC004D;
       color: white;
     }
-    /* For the Help button, we override hover so it only toggles text color on click */
-    #helpButton {
-      /* default text color remains white */
+    /* For the Help button, we override hover so that its default behavior is via click */
+    #helpButton:hover, #helpButton:active {
+      background-color: transparent;
+      color: #CC004D;
     }
     /* Responsive CSS */
     @media (max-width: 600px) {
@@ -123,40 +124,39 @@
       });
     }
     
-    // Use a click event on the Help button for both desktop and mobile.
-    // Toggle a help state variable to control when help is active.
-    let helpActive = false;
+    // Use a single click event for the Help button (applies for desktop and mobile).
+    // When clicked, the help function will reveal the hidden text in pink,
+    // then automatically revert after a brief delay.
     const helpButton = document.getElementById("helpButton");
     helpButton.addEventListener('click', function(e) {
       e.preventDefault();
-      helpActive = !helpActive;
-      if (helpActive) {
-        helpReveal();
-        helpButton.style.color = '#CC004D';  // set text to pink when active
-      } else {
+      helpReveal();
+      helpButton.style.color = '#CC004D';  // set text to pink when active
+      // After 2 seconds, hide help and reset the help button color automatically.
+      setTimeout(function() {
         helpHide();
-        helpButton.style.color = 'white';    // revert text to white when inactive
-      }
+        helpButton.style.color = 'white';
+      }, 2000);
     });
     
     // -----------------------------
     // Poem Data (5 stanzas)
     // -----------------------------
     const poemStanzas = [
-      `If peaches had arms
+`If peaches had arms
 surely they would hold one another
 in their peach sleep.`,
-      `And if peaches had feet
+`And if peaches had feet
 it is sure they would
 nudge one another
 with their soft peachy feet.`,
-      `And if peaches could
+`And if peaches could
 they would sleep
 with their dimpled head
 on the other’s
 each to each.`,
-      `Like you and me.`,
-      `And sleep and sleep.`
+`Like you and me.`,
+`And sleep and sleep.`
     ];
     
     const poemContainer = document.getElementById("poemContainer");
@@ -578,3 +578,4 @@ each to each.`,
   </script>
 </body>
 </html>
+
