@@ -478,4 +478,103 @@ each to each.`,
       if (currentRound === 1) {
         if (currentIndexRoundOne < lettersRoundOne.length) {
           const expected = lettersRoundOne[currentIndexRoundOne].dataset.letter;
-          if (expected =
+          if (expected === event.key) {
+            lettersRoundOne[currentIndexRoundOne].style.color = 'black';
+            currentIndexRoundOne++;
+            if (currentIndexRoundOne >= lettersRoundOne.length) {
+              setTimeout(() => {
+                poemContainer.innerHTML = '';
+                startHeartAnimation(5000, () => {
+                  currentRound = 2;
+                  createRoundTwoDisplay();
+                });
+              }, 500);
+            }
+          }
+        }
+      } else if (currentRound === 2) {
+        if (currentIndexRoundTwo < lettersRoundTwo.length) {
+          const expected = lettersRoundTwo[currentIndexRoundTwo].dataset.letter;
+          if (expected === event.key) {
+            lettersRoundTwo[currentIndexRoundTwo].style.visibility = 'visible';
+            lettersRoundTwo[currentIndexRoundTwo].style.color = 'black';
+            currentIndexRoundTwo++;
+            if (currentIndexRoundTwo >= lettersRoundTwo.length) {
+              setTimeout(() => {
+                poemContainer.innerHTML = '';
+                startHeartAnimation(3333, () => {
+                  currentRound = 3;
+                  createRoundThreeDisplay();
+                });
+              }, 500);
+            }
+          }
+        }
+      } else if (currentRound === 3) {
+        if (currentIndexRoundThree < lettersRoundThree.length) {
+          const expected = lettersRoundThree[currentIndexRoundThree].dataset.letter;
+          if (expected === event.key) {
+            lettersRoundThree[currentIndexRoundThree].style.visibility = 'visible';
+            lettersRoundThree[currentIndexRoundThree].style.color = 'black';
+            currentIndexRoundThree++;
+            if (currentIndexRoundThree >= lettersRoundThree.length) {
+              setTimeout(() => {
+                poemContainer.innerHTML = '';
+                startHeartAnimation(3333, () => {
+                  currentRound = 4;
+                  createRoundFourDisplay();
+                });
+              }, 500);
+            }
+          }
+        }
+      } else if (currentRound === 4) {
+        if (currentIndexRoundFour < lettersRoundFour.length) {
+          const expected = lettersRoundFour[currentIndexRoundFour].dataset.letter;
+          if (expected === event.key) {
+            lettersRoundFour[currentIndexRoundFour].style.visibility = 'visible';
+            lettersRoundFour[currentIndexRoundFour].style.color = 'black';
+            currentIndexRoundFour++;
+            if (currentIndexRoundFour >= lettersRoundFour.length) {
+              setTimeout(() => {
+                document.querySelector('h1').innerHTML = '';
+                poemContainer.innerHTML = '';
+                document.body.style.backgroundColor = '#CC004D';
+                document.getElementById('helpButton').style.display = 'none';
+                const messageDiv = document.createElement('div');
+                messageDiv.style.position = 'absolute';
+                messageDiv.style.top = '50%';
+                messageDiv.style.left = '50%';
+                messageDiv.style.transform = 'translate(-50%, -50%)';
+                messageDiv.style.fontSize = '2rem';
+                messageDiv.style.fontWeight = 'bold';
+                messageDiv.style.textAlign = 'center';
+                messageDiv.style.color = 'black';
+                messageDiv.textContent = 'now recite this poem to your lover!';
+                document.body.appendChild(messageDiv);
+              }, 500);
+            }
+          }
+        }
+      }
+    });
+    
+    // -----------------------------
+    // Footer Button Handlers
+    // -----------------------------
+    const backButton = document.getElementById('backButton');
+    const aboutButton = document.getElementById('aboutButton');
+    backButton.addEventListener('click', function() {
+      window.location.href = 'index.html';
+    });
+    aboutButton.addEventListener('click', function() {
+      window.location.href = 'aboutGDJ.html';
+    });
+    
+    // -----------------------------
+    // Start the Game with Round 1
+    // -----------------------------
+    createRoundOneDisplay();
+  </script>
+</body>
+</html>
