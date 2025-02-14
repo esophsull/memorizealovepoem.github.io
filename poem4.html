@@ -127,14 +127,14 @@
     // When clicked, the hidden text is revealed in pink briefly (2 seconds) then re-hidden.
     const helpButton = document.getElementById("helpButton");
     helpButton.addEventListener('click', function(e) {
-      e.preventDefault();
-      helpReveal();
-      helpButton.style.color = '#CC004D';  // set text to pink when active
-      setTimeout(function() {
-        helpHide();
-        helpButton.style.color = 'white';    // revert text to white automatically
-      }, 2000);
-    });
+  e.preventDefault();
+  helpReveal();
+  helpButton.style.color = '#CC004D';  // set text to pink when active
+  setTimeout(function() {
+    helpHide();
+    helpButton.style.color = 'white';    // revert text to white automatically
+  }, 1500); // 1.5-second duration for the help reveal effect
+});
     
     // -----------------------------
     // Poem Data (3 stanzas)
