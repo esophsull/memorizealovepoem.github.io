@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Poem One - Strawberries</title>
+  <title>Poem Four - Strawberries</title>
   <!-- Ensures proper scaling on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
@@ -29,8 +29,7 @@
       font-size: 1.5rem;
       margin-top: 0;
       margin-bottom: 20px;
-      color: #CC004D;
-      font-weight: normal;
+      color: #555;
     }
     #poemContainer {
       user-select: none;
@@ -71,7 +70,8 @@
       padding: 10px 20px;
     }
     footer button:hover {
-      color: #CC004D;
+      background-color: #CC004D;
+      color: white;
     }
     /* Override Help button style so that on hover/tap it only changes text color */
     #helpButton:hover, #helpButton:active {
@@ -96,8 +96,8 @@
   <!-- Hidden input to trigger on-screen keyboard on mobile -->
   <input type="text" id="mobileInput" style="opacity:0; position:absolute; left:-9999px;">
   
-  <h1><em>Strawberries</em>, Edwin Morgan</h1>
-  <h2 class="instruction">Each poem has four rounds. Type to begin.</h2>
+  <h1>Strawberries</h1>
+  <h2 class="instruction">Type any key to begin</h2>
   <div id="poemContainer"></div>
   
   <!-- Footer with Back, Help, and About buttons -->
@@ -111,8 +111,8 @@
     // Detect if the device is mobile.
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     
-    // Always check on touchstart to reinitiate keyboard focus,
-    // but only if the target is not a button.
+    // Mobile: Always check on every touchstart to reinitiate keyboard focus,
+    // but do not focus when tapping on buttons.
     if (isMobile) {
       document.addEventListener('touchstart', function(e) {
         if (!e.target.closest('button')) {
@@ -122,6 +122,13 @@
           }
         }
       });
+    }
+    
+    // Desktop: Add mouse events for the Help button if not mobile.
+    const helpButton = document.getElementById("helpButton");
+    if (!isMobile) {
+      helpButton.addEventListener('mouseenter', helpReveal);
+      helpButton.addEventListener('mouseleave', helpHide);
     }
     
     // -----------------------------
@@ -573,7 +580,7 @@ on the Kilpatrick hills`,
       window.location.href = 'index.html';
     });
     aboutButton.addEventListener('click', function() {
-      window.location.href = 'aboutEM.html';
+      window.location.href = 'aboutGDJ.html';
     });
     
     // -----------------------------
@@ -601,7 +608,3 @@ on the Kilpatrick hills`,
   </script>
 </body>
 </html>
-
-
-
-
