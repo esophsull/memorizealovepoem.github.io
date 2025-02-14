@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Poem Two - Four Rounds</title>
+  <style>
+    /* Global styling */
+    body {
+      background-color: white;
+      font-family: sans-serif;
+      color: black;
+      margin: 0;
+      padding: 20px;
+      text-align: left;
+      font-size: 2rem; /* large text */
+      line-height: 1.4;
+      overflow: auto;
+      position: relative;
+      padding-bottom: 80px; /* space for footer */
+    }
+    h1 {
+      font-size: 2rem; /* match body text size */
+      margin-bottom: 20px;
+    }
+    #poemContainer {
+      user-select: none;
+    }
+    .letter {
+      display: inline;
+    }
+    h2 {
+      background-color: white;
+      font-family: sans-serif;
+      color: #CC004D;
+      margin: 0;
+      text-align: left;
+      font-size: 2rem; /* large text */
+      line-height: 1.4;
+      overflow: auto;
+      position: relative;
+      font-weight: normal;
+    }
+    /* Heart styling and animation (Rounds 1–3 only) */
+    .heart {
+      position: absolute;
+      animation-name: floatUp;
+      animation-timing-function: linear;
+      pointer-events: none;
+    }
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
+    }
+    /* Footer styling */
+    footer {
+      background-color: black;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+    footer button {
+      background-color: transparent;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      padding: 10px 20px;
+    }
+    footer button:hover {
+      color: #CC004D;
+     
+    }
+  </style>
+</head>
+<body>
+  <h1><em>Filling Station</em>, Elizabeth Bishop</h1>
+  <h2> For each poem, there are four rounds. Type to start. </h2>
+  <div id="poemContainer"></div>
+  
+  <!-- Footer with Back, Help, and About buttons -->
+  <footer>
+    <button id="backButton">Back</button>
+    <button id="helpButton">Help</button>
+    <button id="aboutButton">About</button>
+  </footer>
+  
+  <script>
+    // -----------------------------
+    // Poem Data (6 stanzas)
+    // -----------------------------
+    const poemStanzas = [
+`Oh, but it is dirty!
+-- this little filling station,
+oil-soaked, oil-permeated
+to a disturbing, over-all
+black translucency.
+Be careful with that match!`,
+
+`Father wears a dirty,
+oil-soaked monkey suit
+that cuts him under the arms,
+and several quick and saucy
+and greasy sons assist him
+(it's a family filling station),
+all quite thoroughly dirty.`,
+
+`Do they live in the station?
+It has a cement porch
+behind the pumps, and on it
+a set of crushed and grease-
+impregnated wickerwork;
+on the wicker sofa
+a dirty dog, quite comfy.`,
+
+`Some comic books provide
+the only note of color--
+of certain color. They lie
+upon a big dim doily
+draping a taboret
+(part of the set), beside
+a big hirsute begonia.`,
+
+`Why the extraneous plant?
+Why the taboret?
+Why, oh why, the doily?
+(Embroidered in daisy stitch
+with marguerites, I think,
+and heavy with gray crochet.)`,
+
+`Somebody embroidered the doily.
+Somebody waters the plant,
+or oils it, maybe. Somebody
+arranges the rows of cans
+so that they softly say:
+ESSO-SO-SO-SO
+to high-strung automobiles.
+Somebody loves us all.`
+    ];
+
+    const poemContainer = document.getElementById("poemContainer");
+
+    // -----------------------------
+    // Global state variables
+    // -----------------------------
+    let currentRound = 1;  // Rounds: 1, 2, 3, or 4
+    // Round 1 variables
+    let lettersRoundOne = [];
+    let currentIndexRoundOne = 0;
+    // Round 2 variables
+    let lettersRoundTwo = [];
+    let currentIndexRoundTwo = 0;
+    // Round 3 variables
+    let lettersRoundThree = [];
+    let currentIndexRoundThree = 0;
+    // Round 4 variables
+    let lettersRoundFour = [];
+    let currentIndexRoundFour = 0;
+
+    // -----------------------------
+    // Round 1: Full Poem in Light Grey
+    // -----------------------------
+    function createRoundOneDisplay() {
+      poemContainer.innerHTML = '';
+      lettersRoundOne = [];
+      currentIndexRoundOne = 0;
+      poemStanzas.forEach(stanza => {
+        const p = document.createElement('p');
+        const lines = stanza.split('\n');
+        lines.forEach((line, li) => {
+          for (let char of line) {
+            const span = document.createElement('span');
+            span.classList.add('letter');
+            span.dataset.letter = char;
+            if (char === ' ') {
+              span.innerHTML = '&nbsp;';
+            } else {
+              span.textContent = char;
+            }
+            // Initially, letters are light grey.
+            span.style.color = '#D3D3D3';
+            p.appendChild(span);
+            lettersRoundOne.push(span);
+          }
+          if (li < lines.length - 1) {
+            p.appendChild(document.createElement('br'));
+          }
+        });
+        poemContainer.appendChild(p);
+      });
+    }
+    document.addEventListener('keydown', function removeH2OnAnyKey(e) {
+  const h2Elements = document.querySelectorAll('h2');
+  h2Elements.forEach(el => el.remove());
+});
+
+    // -----------------------------
+    // Round 2: First Letter of Each Word Visible
+    // -----------------------------
+    function createRoundTwoDisplay() {
+      poemContainer.innerHTML = '';
+      lettersRoundTwo = [];
+      currentIndexRoundTwo = 0;
+      poemStanzas.forEach(stanza => {
+        const p = document.createElement('p');
+        const lines = stanza.split('\n');
+        lines.forEach((line, li) => {
+          for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            const span = document.createElement('span');
+            span.dataset.letter = char;
+            if (char === ' ') {
+              span.innerHTML = '&nbsp;';
+            } else if (!/[A-Za-z]/.test(char)) {
+              span.textContent = char;
+            } else {
+              // Show first letter of each word; hide subsequent letters.
+              if (i === 0 || line[i - 1] === ' ') {
+                span.textContent = char;
+              } else {
+                span.textContent = char;
+                span.style.visibility = 'hidden';
+                lettersRoundTwo.push(span);
+              }
+            }
+            p.appendChild(span);
+          }
+          if (li < lines.length - 1) {
+            p.appendChild(document.createElement('br'));
+          }
+        });
+        poemContainer.appendChild(p);
+      });
+    }
+
+    // -----------------------------
+    // Round 3: Only First Character of Each Line Visible
+    // -----------------------------
+    function createRoundThreeDisplay() {
+      poemContainer.innerHTML = '';
+      lettersRoundThree = [];
+      currentIndexRoundThree = 0;
+      poemStanzas.forEach(stanza => {
+        const p = document.createElement('p');
+        const lines = stanza.split('\n');
+        lines.forEach((line, li) => {
+          for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            const span = document.createElement('span');
+            span.dataset.letter = char;
+            if (char === ' ') {
+              span.innerHTML = '&nbsp;';
+            } else {
+              span.textContent = char;
+            }
+            // For each line, only the first character is visible.
+            if (i === 0) {
+              // Always visible.
+            } else if (/[A-Za-z]/.test(char)) {
+              span.style.visibility = 'hidden';
+              lettersRoundThree.push(span);
+            }
+            p.appendChild(span);
+          }
+          if (li < lines.length - 1) {
+            p.appendChild(document.createElement('br'));
+          }
+        });
+        poemContainer.appendChild(p);
+      });
+    }
+
+    // -----------------------------
+    // Round 4: Only the First Letter of the Poem Visible
+    // (All other alphabetic letters are hidden; punctuation and spaces are preserved.)
+    // -----------------------------
+    function createRoundFourDisplay() {
+      poemContainer.innerHTML = '';
+      lettersRoundFour = [];
+      currentIndexRoundFour = 0;
+      let firstLetterShown = false; // Flag to track the very first alphabetical letter.
+      poemStanzas.forEach(stanza => {
+        const p = document.createElement('p');
+        const lines = stanza.split('\n');
+        lines.forEach((line, li) => {
+          for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            const span = document.createElement('span');
+            span.dataset.letter = char;
+            if (char === ' ') {
+              span.innerHTML = '&nbsp;';
+            } else {
+              span.textContent = char;
+            }
+            if (!/[A-Za-z]/.test(char)) {
+              // Punctuation is always visible.
+            } else {
+              if (!firstLetterShown) {
+                firstLetterShown = true;
+                // Show the very first alphabetical letter.
+              } else {
+                span.style.visibility = 'hidden';
+                lettersRoundFour.push(span);
+              }
+            }
+            p.appendChild(span);
+          }
+          if (li < lines.length - 1) {
+            p.appendChild(document.createElement('br'));
+          }
+        });
+        poemContainer.appendChild(p);
+      });
+    }
+
+    // -----------------------------
+    // Heart Animation (for Rounds 1–3 only)
+    // Accepts a duration (in ms) and a callback.
+    // -----------------------------
+    function startHeartAnimation(duration, callback) {
+      // Use default duration of 5000ms if not provided.
+      if (!duration) duration = 5000;
+      const heartInterval = setInterval(createHeart, 200);
+      setTimeout(() => {
+        clearInterval(heartInterval);
+        setTimeout(() => {
+          if (callback) callback();
+        }, 500);
+      }, duration);
+    }
+    function createHeart() {
+      const heart = document.createElement('span');
+      heart.classList.add('heart');
+      heart.innerText = '♥︎';
+      heart.style.color = Math.random() < 0.5 ? 'black' : '#CC004D';
+      const fontSize = Math.floor(Math.random() * 20) + 20;
+      heart.style.fontSize = fontSize + 'px';
+      heart.style.left = Math.floor(Math.random() * 100) + '%';
+      heart.style.bottom = '-200px';
+      const duration = Math.random() * 4 + 3;
+      heart.style.animationDuration = duration + 's';
+      heart.style.animationDelay = Math.random() * 2 + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => {
+        heart.remove();
+      }, duration * 1000);
+    }
+
+    // -----------------------------
+    // Help Button Behavior (for all rounds)
+    // -----------------------------
+    function helpReveal() {
+      if (currentRound === 1) {
+        for (let i = currentIndexRoundOne; i < lettersRoundOne.length; i++) {
+          if (lettersRoundOne[i].style.color === 'rgb(211, 211, 211)' || lettersRoundOne[i].style.color === '#D3D3D3') {
+            lettersRoundOne[i].style.color = '#CC004D';
+          }
+        }
+      } else if (currentRound === 2) {
+        lettersRoundTwo.forEach(span => {
+          if (span.style.visibility === 'hidden') {
+            span.style.visibility = 'visible';
+            span.style.color = '#CC004D';
+          }
+        });
+      } else if (currentRound === 3) {
+        lettersRoundThree.forEach(span => {
+          if (span.style.visibility === 'hidden') {
+            span.style.visibility = 'visible';
+            span.style.color = '#CC004D';
+          }
+        });
+      } else if (currentRound === 4) {
+        lettersRoundFour.forEach(span => {
+          if (span.style.visibility === 'hidden') {
+            span.style.visibility = 'visible';
+            span.style.color = '#CC004D';
+          }
+        });
+      }
+    }
+    function helpHide() {
+      if (currentRound === 1) {
+        for (let i = currentIndexRoundOne; i < lettersRoundOne.length; i++) {
+          if (lettersRoundOne[i].style.color === 'rgb(204, 0, 77)' || lettersRoundOne[i].style.color === '#CC004D') {
+            lettersRoundOne[i].style.color = '#D3D3D3';
+          }
+        }
+      } else if (currentRound === 2) {
+        lettersRoundTwo.forEach(span => {
+          if (span.style.color === 'rgb(204, 0, 77)' || span.style.color === '#CC004D') {
+            span.style.visibility = 'hidden';
+          }
+        });
+      } else if (currentRound === 3) {
+        lettersRoundThree.forEach(span => {
+          if (span.style.color === 'rgb(204, 0, 77)' || span.style.color === '#CC004D') {
+            span.style.visibility = 'hidden';
+          }
+        });
+      } else if (currentRound === 4) {
+        lettersRoundFour.forEach(span => {
+          if (span.style.color === 'rgb(204, 0, 77)' || span.style.color === '#CC004D') {
+            span.style.visibility = 'hidden';
+          }
+        });
+      }
+    }
+
+    // -----------------------------
+    // Shortcut to Complete the Current Round (Ctrl+Alt+X)
+    // -----------------------------
+    function completeCurrentRound() {
+      if (currentRound === 1) {
+        lettersRoundOne.forEach(letter => letter.style.color = 'black');
+        currentIndexRoundOne = lettersRoundOne.length;
+        setTimeout(() => {
+          poemContainer.innerHTML = '';
+          // Round 1 uses a 5000ms heart effect.
+          startHeartAnimation(5000, () => {
+            currentRound = 2;
+            createRoundTwoDisplay();
+          });
+        }, 500);
+      } else if (currentRound === 2) {
+        lettersRoundTwo.forEach(letter => {
+          letter.style.visibility = 'visible';
+          letter.style.color = 'black';
+        });
+        currentIndexRoundTwo = lettersRoundTwo.length;
+        setTimeout(() => {
+          poemContainer.innerHTML = '';
+          // After Round 2, use a shortened heart effect (3333ms).
+          startHeartAnimation(3333, () => {
+            currentRound = 3;
+            createRoundThreeDisplay();
+          });
+        }, 500);
+      } else if (currentRound === 3) {
+        lettersRoundThree.forEach(letter => {
+          letter.style.visibility = 'visible';
+          letter.style.color = 'black';
+        });
+        currentIndexRoundThree = lettersRoundThree.length;
+        setTimeout(() => {
+          poemContainer.innerHTML = '';
+          // After Round 3, use the shortened heart effect (3333ms) before Round 4.
+          startHeartAnimation(3333, () => {
+            currentRound = 4;
+            createRoundFourDisplay();
+          });
+        }, 500);
+      } else if (currentRound === 4) {
+        lettersRoundFour.forEach(letter => {
+          letter.style.visibility = 'visible';
+          letter.style.color = 'black';
+        });
+        currentIndexRoundFour = lettersRoundFour.length;
+        setTimeout(() => {
+          // Finalize Round 4: no heart effect.
+          // Clear the heading and poem, change background to pink.
+          document.querySelector('h1').innerHTML = '';
+          poemContainer.innerHTML = '';
+          document.body.style.backgroundColor = '#CC004D';
+          // Hide the Help button.
+          document.getElementById('helpButton').style.display = 'none';
+          // Create a centered, bold final message.
+          const messageDiv = document.createElement('div');
+          messageDiv.style.position = 'absolute';
+          messageDiv.style.top = '50%';
+          messageDiv.style.left = '50%';
+          messageDiv.style.transform = 'translate(-50%, -50%)';
+          messageDiv.style.fontSize = '2rem';
+          messageDiv.style.fontWeight = 'bold';
+          messageDiv.style.textAlign = 'center';
+          messageDiv.style.color = 'white';
+          messageDiv.textContent = 'now you can recite this poem to your lover!';
+          document.body.appendChild(messageDiv);
+        }, 500);
+      }
+    }
+
+    // -----------------------------
+    // Keydown Event Handler (for all rounds)
+    // -----------------------------
+    document.addEventListener('keydown', function(event) {
+      // Shortcut: If Ctrl+Alt+X is pressed, complete the current round.
+      if (event.ctrlKey && event.altKey && event.key.toLowerCase() === 'x') {
+        event.preventDefault();
+        completeCurrentRound();
+        return;
+      }
+      // Prevent default for single-character keys and backspace.
+      if ((event.key.length === 1 || event.key === "Backspace") && !event.ctrlKey && !event.metaKey) {
+        event.preventDefault();
+      }
+      if (currentRound === 1) {
+        if (currentIndexRoundOne < lettersRoundOne.length) {
+          const expected = lettersRoundOne[currentIndexRoundOne].dataset.letter;
+          if (expected === event.key) {
+            lettersRoundOne[currentIndexRoundOne].style.color = 'black';
+            currentIndexRoundOne++;
+            if (currentIndexRoundOne >= lettersRoundOne.length) {
+              setTimeout(() => {
+                poemContainer.innerHTML = '';
+                startHeartAnimation(5000, () => {
+                  currentRound = 2;
+                  createRoundTwoDisplay();
+                });
+              }, 500);
+            }
+          }
+        }
+      } else if (currentRound === 2) {
+        if (currentIndexRoundTwo < lettersRoundTwo.length) {
+          const expected = lettersRoundTwo[currentIndexRoundTwo].dataset.letter;
+          if (expected === event.key) {
+            lettersRoundTwo[currentIndexRoundTwo].style.visibility = 'visible';
+            lettersRoundTwo[currentIndexRoundTwo].style.color = 'black';
+            currentIndexRoundTwo++;
+            if (currentIndexRoundTwo >= lettersRoundTwo.length) {
+              setTimeout(() => {
+                poemContainer.innerHTML = '';
+                startHeartAnimation(3333, () => {
+                  currentRound = 3;
+                  createRoundThreeDisplay();
+                });
+              }, 500);
+            }
+          }
+        }
+      } else if (currentRound === 3) {
+        if (currentIndexRoundThree < lettersRoundThree.length) {
+          const expected = lettersRoundThree[currentIndexRoundThree].dataset.letter;
+          if (expected === event.key) {
+            lettersRoundThree[currentIndexRoundThree].style.visibility = 'visible';
+            lettersRoundThree[currentIndexRoundThree].style.color = 'black';
+            currentIndexRoundThree++;
+            if (currentIndexRoundThree >= lettersRoundThree.length) {
+              setTimeout(() => {
+                poemContainer.innerHTML = '';
+                startHeartAnimation(3333, () => {
+                  currentRound = 4;
+                  createRoundFourDisplay();
+                });
+              }, 500);
+            }
+          }
+        }
+      } else if (currentRound === 4) {
+        if (currentIndexRoundFour < lettersRoundFour.length) {
+          const expected = lettersRoundFour[currentIndexRoundFour].dataset.letter;
+          if (expected === event.key) {
+            lettersRoundFour[currentIndexRoundFour].style.visibility = 'visible';
+            lettersRoundFour[currentIndexRoundFour].style.color = 'black';
+            currentIndexRoundFour++;
+            if (currentIndexRoundFour >= lettersRoundFour.length) {
+              setTimeout(() => {
+                document.querySelector('h1').innerHTML = '';
+                poemContainer.innerHTML = '';
+                document.body.style.backgroundColor = '#CC004D';
+                document.getElementById('helpButton').style.display = 'none';
+                const messageDiv = document.createElement('div');
+                messageDiv.style.position = 'absolute';
+                messageDiv.style.top = '50%';
+                messageDiv.style.left = '50%';
+                messageDiv.style.transform = 'translate(-50%, -50%)';
+                messageDiv.style.fontSize = '2rem';
+                messageDiv.style.fontWeight = 'bold';
+                messageDiv.style.textAlign = 'center';
+                messageDiv.style.color = 'black';
+                messageDiv.textContent = 'now recite this poem to your lover!';
+                document.body.appendChild(messageDiv);
+              }, 500);
+            }
+          }
+        }
+      }
+    });
+
+    // -----------------------------
+    // Footer Buttons: Back, Help, and About
+    // -----------------------------
+    const backButton = document.getElementById('backButton');
+    const helpButton = document.getElementById('helpButton');
+    const aboutButton = document.getElementById('aboutButton');
+    backButton.addEventListener('click', function() {
+      window.location.href = 'index.html';
+    });
+    helpButton.addEventListener('mouseenter', helpReveal);
+    helpButton.addEventListener('mouseleave', helpHide);
+    aboutButton.addEventListener('click', function() {
+      window.location.href = 'aboutEB.html';
+    });
+
+    // -----------------------------
+    // Start the Game with Round One
+    // -----------------------------
+    createRoundOneDisplay();
+  </script>
+</body>
+</html>
