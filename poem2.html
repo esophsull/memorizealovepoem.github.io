@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Poem Two - Filling Station</title>
-  <!-- Ensures proper scaling on mobile devices -->
+  <title>Poem Two</title>
+  <!-- Ensure proper scaling on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* Global styling */
@@ -30,7 +30,7 @@
       margin-top: 0;
       margin-bottom: 20px;
       color: #CC004D;
-      font-weight: normal
+      font-weight: normal;
     }
     #poemContainer {
       user-select: none;
@@ -73,7 +73,7 @@
     footer button:hover {
       color: #CC004D;
     }
-    /* Override Help button style so that on hover/tap it only changes text color */
+    /* Help button override: using click-to-toggle, so default text remains white */
     #helpButton:hover, #helpButton:active {
       background-color: transparent;
       color: #CC004D;
@@ -83,7 +83,7 @@
       body {
         font-size: 1.5rem;
         padding: 10px;
-        padding-bottom: 120px; /* increased space for footer */
+        padding-bottom: 120px; /* extra space for footer */
       }
       footer button {
         font-size: 1.2rem;
@@ -111,8 +111,7 @@
     // Detect if the device is mobile.
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     
-    // Always check on every touchstart so that if the keyboard is lost, it reappears,
-    // but do not focus when a button is tapped.
+    // Mobile: On every touchstart (except taps on buttons), re-focus the hidden input.
     if (isMobile) {
       document.addEventListener('touchstart', function(e) {
         if (!e.target.closest('button')) {
@@ -124,26 +123,38 @@
       });
     }
     
+    // Use a single click event for the Help button (applies for both desktop and mobile).
+    // When clicked, it reveals hidden text in pink briefly (2 seconds), then re-hides it and resets the button color.
+    const helpButton = document.getElementById("helpButton");
+    helpButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      helpReveal();
+      helpButton.style.color = '#CC004D';  // Set text to pink when active.
+      setTimeout(function() {
+        helpHide();
+        helpButton.style.color = 'white';    // Automatically revert text color to white.
+      }, 2000); // 2-second duration for help reveal.
+    });
+    
     // -----------------------------
-    // Poem Data (6 stanzas)
+    // Poem Data (6 stanzas for the Filling Station poem)
     // -----------------------------
     const poemStanzas = [
-      // Stanza 1
       `Oh, but it is dirty!
---this little filling station,
+—this little filling station,
 oil-soaked, oil-permeated
 to a disturbing, over-all
 black translucency.
 Be careful with that match!`,
-      // Stanza 2
+      
       `Father wears a dirty,
 oil-soaked monkey suit
 that cuts him under the arms,
 and several quick and saucy
 and greasy sons assist him
-(it's a family filling station),
+(it’s a family filling station),
 all quite thoroughly dirty.`,
-      // Stanza 3
+      
       `Do they live in the station?
 It has a cement porch
 behind the pumps, and on it
@@ -151,28 +162,28 @@ a set of crushed and grease-
 impregnated wickerwork;
 on the wicker sofa
 a dirty dog, quite comfy.`,
-      // Stanza 4
+      
       `Some comic books provide
-the only note of color--
+the only note of color—
 of certain color. They lie
 upon a big dim doily
 draping a taboret
 (part of the set), beside
 a big hirsute begonia.`,
-      // Stanza 5
+      
       `Why the extraneous plant?
 Why the taboret?
 Why, oh why, the doily?
 (Embroidered in daisy stitch
 with marguerites, I think,
 and heavy with gray crochet.)`,
-      // Stanza 6
+      
       `Somebody embroidered the doily.
 Somebody waters the plant,
 or oils it, maybe. Somebody
 arranges the rows of cans
 so that they softly say:
-ESSO-SO-SO-SO
+esso—so—so—so
 to high-strung automobiles.
 Somebody loves us all.`
     ];
@@ -582,31 +593,12 @@ Somebody loves us all.`
     // -----------------------------
     const backButton = document.getElementById('backButton');
     const aboutButton = document.getElementById('aboutButton');
-    const helpButton = document.getElementById('helpButton');
     backButton.addEventListener('click', function() {
       window.location.href = 'index.html';
     });
     aboutButton.addEventListener('click', function() {
       window.location.href = 'aboutEB.html';
     });
-    
-    // -----------------------------
-    // Mobile Adaptation for Help Button Touch Events
-    // -----------------------------
-    if (isMobile) {
-      helpButton.removeEventListener('mouseenter', helpReveal);
-      helpButton.removeEventListener('mouseleave', helpHide);
-      helpButton.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        helpReveal();
-        helpButton.style.color = '#CC004D';  // set text to pink on touchstart
-      });
-      helpButton.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        helpHide();
-        helpButton.style.color = 'white';    // revert text to white on touchend
-      });
-    }
     
     // -----------------------------
     // Start the Game with Round 1
