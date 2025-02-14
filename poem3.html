@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Poem Three - I want to die while you love me</title>
-  <!-- Ensures proper scaling on mobile devices -->
+  <title>Poem Three</title>
+  <!-- Ensure proper scaling on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* Global styling */
@@ -73,7 +73,7 @@
     footer button:hover {
       color: #CC004D;
     }
-    /* Override Help button style so that on hover/tap it only changes text color */
+    /* Override Help button hover/active so it only changes text color */
     #helpButton:hover, #helpButton:active {
       background-color: transparent;
       color: #CC004D;
@@ -83,7 +83,7 @@
       body {
         font-size: 1.5rem;
         padding: 10px;
-        padding-bottom: 120px; /* increased space for footer */
+        padding-bottom: 120px; /* extra space for footer */
       }
       footer button {
         font-size: 1.2rem;
@@ -96,7 +96,7 @@
   <!-- Hidden input to trigger on-screen keyboard on mobile -->
   <input type="text" id="mobileInput" style="opacity:0; position:absolute; left:-9999px;">
   
-  <h1><em>I Want to Die While You Love Me</em>, Georgia Douglas Johnson</h1>
+  <h1><em>I Want to Die While You Love Me</em></h1>
   <h2 class="instruction">Each poem has four rounds. Type to begin.</h2>
   <div id="poemContainer"></div>
   
@@ -108,11 +108,10 @@
   </footer>
   
   <script>
-    // Detect if the device is mobile.
+    // Detect if device is mobile.
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     
-    // Always check on every touchstart so that if the keyboard is lost, it reappears,
-    // but do not focus when tapping on buttons.
+    // For mobile: On every touchstart (except when tapping a button), re-focus the hidden input.
     if (isMobile) {
       document.addEventListener('touchstart', function(e) {
         if (!e.target.closest('button')) {
@@ -124,8 +123,21 @@
       });
     }
     
+    // Use a single click event for the Help button for both desktop and mobile.
+    // When clicked, it reveals hidden text in pink for 2 seconds then automatically re-hides it.
+    const helpButton = document.getElementById("helpButton");
+    helpButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      helpReveal();
+      helpButton.style.color = '#CC004D';
+      setTimeout(function() {
+        helpHide();
+        helpButton.style.color = 'white';
+      }, 2000);
+    });
+    
     // -----------------------------
-    // Poem Data (4 stanzas)
+    // Poem Data (4 stanzas for "I want to die while you love me")
     // -----------------------------
     const poemStanzas = [
 `I want to die while you love me,
@@ -162,9 +174,7 @@ Grow dim or cease to be.`
     // -----------------------------
     document.addEventListener('keydown', function removeInstruction() {
       const instr = document.querySelector('h2.instruction');
-      if (instr) {
-        instr.remove();
-      }
+      if (instr) { instr.remove(); }
       document.removeEventListener('keydown', removeInstruction);
     });
     
@@ -551,31 +561,12 @@ Grow dim or cease to be.`
     // -----------------------------
     const backButton = document.getElementById('backButton');
     const aboutButton = document.getElementById('aboutButton');
-    const helpButton = document.getElementById('helpButton');
     backButton.addEventListener('click', function() {
       window.location.href = 'index.html';
     });
     aboutButton.addEventListener('click', function() {
       window.location.href = 'aboutGDJ.html';
     });
-    
-    // -----------------------------
-    // Mobile Adaptation for Help Button Touch Events
-    // -----------------------------
-    if (isMobile) {
-      helpButton.removeEventListener('mouseenter', helpReveal);
-      helpButton.removeEventListener('mouseleave', helpHide);
-      helpButton.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        helpReveal();
-        helpButton.style.color = '#CC004D';  // set text to pink on touchstart
-      });
-      helpButton.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        helpHide();
-        helpButton.style.color = 'white';    // revert text to white on touchend
-      });
-    }
     
     // -----------------------------
     // Start the Game with Round 1
