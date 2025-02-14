@@ -127,14 +127,14 @@
     // When clicked, it reveals hidden text in pink briefly (2 seconds), then re-hides it and resets the button color.
     const helpButton = document.getElementById("helpButton");
     helpButton.addEventListener('click', function(e) {
-      e.preventDefault();
-      helpReveal();
-      helpButton.style.color = '#CC004D';  // Set text to pink when active.
-      setTimeout(function() {
-        helpHide();
-        helpButton.style.color = 'white';    // Automatically revert text color to white.
-      }, 2000); // 2-second duration for help reveal.
-    });
+  e.preventDefault();
+  helpReveal();
+  helpButton.style.color = '#CC004D';  // set text to pink when active
+  setTimeout(function() {
+    helpHide();
+    helpButton.style.color = 'white';    // revert text to white automatically
+  }, 1500); // 1.5-second duration for the help reveal effect
+});
     
     // -----------------------------
     // Poem Data (6 stanzas for the Filling Station poem)
