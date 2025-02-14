@@ -22,7 +22,14 @@
     }
     h1 {
       font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    /* Instructional note style */
+    h2.instruction {
+      font-size: 1.5rem;
+      margin-top: 0;
       margin-bottom: 20px;
+      color: #CC004D; /* a darker gray so it stands out */
     }
     #poemContainer {
       user-select: none;
@@ -63,14 +70,14 @@
       padding: 10px 20px;
     }
     footer button:hover {
-      background-color: #CC004D;
-      color: white;
+      color: #CC004D;
     }
     /* Responsive CSS */
     @media (max-width: 600px) {
       body {
         font-size: 1.5rem;
         padding: 10px;
+        padding-bottom: 120px; /* increased space for footer */
       }
       footer button {
         font-size: 1.2rem;
@@ -84,6 +91,7 @@
   <input type="text" id="mobileInput" style="opacity:0; position:absolute; left:-9999px;">
   
   <h1>Strawberries</h1>
+  <h2 class="instruction">Type any key to begin</h2>
   <div id="poemContainer"></div>
   
   <!-- Footer with Back, Help, and About buttons -->
@@ -97,12 +105,11 @@
     // Detect if the device is mobile.
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     
-    // One-time touch listener to focus the hidden input.
+    // One-time touch listener to focus the hidden input (trigger on-screen keyboard)
     if (isMobile) {
       const mobileInput = document.getElementById("mobileInput");
       const focusInput = () => {
         mobileInput.focus();
-        // Remove this event listener after the first touch.
         document.removeEventListener('touchstart', focusInput);
       };
       document.addEventListener('touchstart', focusInput);
@@ -157,6 +164,18 @@ on the Kilpatrick hills`,
     let lettersRoundTwo = [], currentIndexRoundTwo = 0;
     let lettersRoundThree = [], currentIndexRoundThree = 0;
     let lettersRoundFour = [], currentIndexRoundFour = 0;
+    
+    // -----------------------------
+    // Remove instructional h2 on first keystroke
+    // -----------------------------
+    document.addEventListener('keydown', function removeInstruction() {
+      const instr = document.querySelector('h2.instruction');
+      if (instr) {
+        instr.remove();
+      }
+      // Remove this listener after first key press.
+      document.removeEventListener('keydown', removeInstruction);
+    });
     
     // -----------------------------
     // Round 1: Full Poem in Light Grey
@@ -546,7 +565,7 @@ on the Kilpatrick hills`,
       window.location.href = 'index.html';
     });
     aboutButton.addEventListener('click', function() {
-      window.location.href = 'aboutGDJ.html';
+      window.location.href = 'aboutEM.html';
     });
     
     // -----------------------------
@@ -572,4 +591,5 @@ on the Kilpatrick hills`,
   </script>
 </body>
 </html>
+
 
