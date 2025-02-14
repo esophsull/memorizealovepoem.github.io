@@ -126,15 +126,15 @@
     // Use a single click event for the Help button for both desktop and mobile.
     // When clicked, it reveals hidden text in pink for 2 seconds then automatically re-hides it.
     const helpButton = document.getElementById("helpButton");
-    helpButton.addEventListener('click', function(e) {
-      e.preventDefault();
-      helpReveal();
-      helpButton.style.color = '#CC004D';
-      setTimeout(function() {
-        helpHide();
-        helpButton.style.color = 'white';
-      }, 2000);
-    });
+   helpButton.addEventListener('click', function(e) {
+  e.preventDefault();
+  helpReveal();
+  helpButton.style.color = '#CC004D';  // set text to pink when active
+  setTimeout(function() {
+    helpHide();
+    helpButton.style.color = 'white';    // revert text to white automatically
+  }, 1500); // 1.5-second duration for the help reveal effect
+});
     
     // -----------------------------
     // Poem Data (4 stanzas for "I want to die while you love me")
