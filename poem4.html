@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Poem Four - Strawberries</title>
-  <!-- Ensures proper scaling on mobile devices -->
+  <title>Poem Four</title>
+  <!-- Ensure proper scaling on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* Global styling */
@@ -29,7 +29,8 @@
       font-size: 1.5rem;
       margin-top: 0;
       margin-bottom: 20px;
-      color: #555;
+      color: #CC004D;
+      font-weight: normal;
     }
     #poemContainer {
       user-select: none;
@@ -70,10 +71,9 @@
       padding: 10px 20px;
     }
     footer button:hover {
-      background-color: #CC004D;
-      color: white;
+      color: #CC004D;
     }
-    /* Override Help button style so that on hover/tap it only changes text color */
+    /* Help button override: using click-to-toggle, so its default remains white */
     #helpButton:hover, #helpButton:active {
       background-color: transparent;
       color: #CC004D;
@@ -83,7 +83,7 @@
       body {
         font-size: 1.5rem;
         padding: 10px;
-        padding-bottom: 120px; /* increased space for footer */
+        padding-bottom: 120px; /* extra space for footer */
       }
       footer button {
         font-size: 1.2rem;
@@ -96,8 +96,8 @@
   <!-- Hidden input to trigger on-screen keyboard on mobile -->
   <input type="text" id="mobileInput" style="opacity:0; position:absolute; left:-9999px;">
   
-  <h1>Strawberries</h1>
-  <h2 class="instruction">Type any key to begin</h2>
+  <h1><em>Strawberries</em>, Edwin Morgan</h1>
+  <h2 class="instruction">Each poem has four rounds. Type to begin.</h2>
   <div id="poemContainer"></div>
   
   <!-- Footer with Back, Help, and About buttons -->
@@ -111,8 +111,7 @@
     // Detect if the device is mobile.
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     
-    // Mobile: Always check on every touchstart to reinitiate keyboard focus,
-    // but do not focus when tapping on buttons.
+    // Mobile: On every touchstart (unless tapping a button), focus the hidden input
     if (isMobile) {
       document.addEventListener('touchstart', function(e) {
         if (!e.target.closest('button')) {
@@ -124,12 +123,18 @@
       });
     }
     
-    // Desktop: Add mouse events for the Help button if not mobile.
+    // Use a single click event for the Help button on both desktop and mobile.
+    // When clicked, the hidden text is revealed in pink briefly (2 seconds) then re-hidden.
     const helpButton = document.getElementById("helpButton");
-    if (!isMobile) {
-      helpButton.addEventListener('mouseenter', helpReveal);
-      helpButton.addEventListener('mouseleave', helpHide);
-    }
+    helpButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      helpReveal();
+      helpButton.style.color = '#CC004D';  // set text to pink when active
+      setTimeout(function() {
+        helpHide();
+        helpButton.style.color = 'white';    // revert text to white automatically
+      }, 2000);
+    });
     
     // -----------------------------
     // Poem Data (3 stanzas)
@@ -212,7 +217,9 @@ on the Kilpatrick hills`,
             p.appendChild(span);
             lettersRoundOne.push(span);
           }
-          if (li < lines.length - 1) p.appendChild(document.createElement('br'));
+          if (li < lines.length - 1) {
+            p.appendChild(document.createElement('br'));
+          }
         });
         poemContainer.appendChild(p);
       });
@@ -248,7 +255,9 @@ on the Kilpatrick hills`,
             }
             p.appendChild(span);
           }
-          if (li < lines.length - 1) p.appendChild(document.createElement('br'));
+          if (li < lines.length - 1) {
+            p.appendChild(document.createElement('br'));
+          }
         });
         poemContainer.appendChild(p);
       });
@@ -278,7 +287,9 @@ on the Kilpatrick hills`,
             }
             p.appendChild(span);
           }
-          if (li < lines.length - 1) p.appendChild(document.createElement('br'));
+          if (li < lines.length - 1) {
+            p.appendChild(document.createElement('br'));
+          }
         });
         poemContainer.appendChild(p);
       });
@@ -313,7 +324,9 @@ on the Kilpatrick hills`,
             }
             p.appendChild(span);
           }
-          if (li < lines.length - 1) p.appendChild(document.createElement('br'));
+          if (li < lines.length - 1) {
+            p.appendChild(document.createElement('br'));
+          }
         });
         poemContainer.appendChild(p);
       });
@@ -575,31 +588,12 @@ on the Kilpatrick hills`,
     // -----------------------------
     const backButton = document.getElementById('backButton');
     const aboutButton = document.getElementById('aboutButton');
-    const helpButton = document.getElementById('helpButton');
     backButton.addEventListener('click', function() {
       window.location.href = 'index.html';
     });
     aboutButton.addEventListener('click', function() {
-      window.location.href = 'aboutGDJ.html';
+      window.location.href = 'aboutEM.html';
     });
-    
-    // -----------------------------
-    // Mobile Adaptation for Help Button Touch Events
-    // -----------------------------
-    if (isMobile) {
-      helpButton.removeEventListener('mouseenter', helpReveal);
-      helpButton.removeEventListener('mouseleave', helpHide);
-      helpButton.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        helpReveal();
-        helpButton.style.color = '#CC004D';  // set text to pink on touchstart
-      });
-      helpButton.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        helpHide();
-        helpButton.style.color = 'white';    // revert text to white on touchend
-      });
-    }
     
     // -----------------------------
     // Start the Game with Round 1
