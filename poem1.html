@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Poem Four - If Peaches Had Arms</title>
+  <title>Poem One</title>
   <!-- Ensure proper scaling on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
@@ -29,8 +29,7 @@
       font-size: 1.5rem;
       margin-top: 0;
       margin-bottom: 20px;
-      color: #CC004D;
-      font-weight:normal;
+      color: #555;
     }
     #poemContainer {
       user-select: none;
@@ -71,12 +70,12 @@
       padding: 10px 20px;
     }
     footer button:hover {
-      color: #CC004D;
+      background-color: #CC004D;
+      color: white;
     }
-    /* Override Help button style so that on hover/tap it only changes text color */
-    #helpButton:hover, #helpButton:active {
-      background-color: transparent;
-      color: #CC004D;
+    /* For the Help button, we override hover so it only toggles text color on click */
+    #helpButton {
+      /* default text color remains white */
     }
     /* Responsive CSS */
     @media (max-width: 600px) {
@@ -96,8 +95,8 @@
   <!-- Hidden input to trigger on-screen keyboard on mobile -->
   <input type="text" id="mobileInput" style="opacity:0; position:absolute; left:-9999px;">
   
-  <h1><em>Peaches-- Six in a Tin Bowl, Sarajevo</em>, Sandra Cisneros</h1>
-  <h2 class="instruction">Each poem has four rounds. Type to begin.</h2>
+  <h1>If peaches had arms</h1>
+  <h2 class="instruction">Type any key to begin</h2>
   <div id="poemContainer"></div>
   
   <!-- Footer with Back, Help, and About buttons -->
@@ -108,7 +107,7 @@
   </footer>
   
   <script>
-    // Detect if device is mobile.
+    // Detect if the device is mobile.
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     
     // Always check on every touchstart so that if the keyboard is lost, it reappears,
@@ -120,33 +119,44 @@
           if (document.activeElement !== mobileInput) {
             mobileInput.focus();
           }
-          if (!isMobile) {
-  helpButton.addEventListener('mouseenter', helpReveal);
-  helpButton.addEventListener('mouseleave', helpHide);
-}
-
         }
       });
     }
+    
+    // Use a click event on the Help button for both desktop and mobile.
+    // Toggle a help state variable to control when help is active.
+    let helpActive = false;
+    const helpButton = document.getElementById("helpButton");
+    helpButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      helpActive = !helpActive;
+      if (helpActive) {
+        helpReveal();
+        helpButton.style.color = '#CC004D';  // set text to pink when active
+      } else {
+        helpHide();
+        helpButton.style.color = 'white';    // revert text to white when inactive
+      }
+    });
     
     // -----------------------------
     // Poem Data (5 stanzas)
     // -----------------------------
     const poemStanzas = [
-`If peaches had arms
+      `If peaches had arms
 surely they would hold one another
 in their peach sleep.`,
-`And if peaches had feet
+      `And if peaches had feet
 it is sure they would
 nudge one another
 with their soft peachy feet.`,
-`And if peaches could
+      `And if peaches could
 they would sleep
 with their dimpled head
-on the other's
+on the other’s
 each to each.`,
-`Like you and me.`,
-`And sleep and sleep.`
+      `Like you and me.`,
+      `And sleep and sleep.`
     ];
     
     const poemContainer = document.getElementById("poemContainer");
@@ -191,9 +201,7 @@ each to each.`,
             p.appendChild(span);
             lettersRoundOne.push(span);
           }
-          if (li < lines.length - 1) {
-            p.appendChild(document.createElement('br'));
-          }
+          if (li < lines.length - 1) p.appendChild(document.createElement('br'));
         });
         poemContainer.appendChild(p);
       });
@@ -229,9 +237,7 @@ each to each.`,
             }
             p.appendChild(span);
           }
-          if (li < lines.length - 1) {
-            p.appendChild(document.createElement('br'));
-          }
+          if (li < lines.length - 1) p.appendChild(document.createElement('br'));
         });
         poemContainer.appendChild(p);
       });
@@ -261,9 +267,7 @@ each to each.`,
             }
             p.appendChild(span);
           }
-          if (li < lines.length - 1) {
-            p.appendChild(document.createElement('br'));
-          }
+          if (li < lines.length - 1) p.appendChild(document.createElement('br'));
         });
         poemContainer.appendChild(p);
       });
@@ -298,9 +302,7 @@ each to each.`,
             }
             p.appendChild(span);
           }
-          if (li < lines.length - 1) {
-            p.appendChild(document.createElement('br'));
-          }
+          if (li < lines.length - 1) p.appendChild(document.createElement('br'));
         });
         poemContainer.appendChild(p);
       });
@@ -476,122 +478,4 @@ each to each.`,
       if (currentRound === 1) {
         if (currentIndexRoundOne < lettersRoundOne.length) {
           const expected = lettersRoundOne[currentIndexRoundOne].dataset.letter;
-          if (expected === event.key) {
-            lettersRoundOne[currentIndexRoundOne].style.color = 'black';
-            currentIndexRoundOne++;
-            if (currentIndexRoundOne >= lettersRoundOne.length) {
-              setTimeout(() => {
-                poemContainer.innerHTML = '';
-                startHeartAnimation(5000, () => {
-                  currentRound = 2;
-                  createRoundTwoDisplay();
-                });
-              }, 500);
-            }
-          }
-        }
-      } else if (currentRound === 2) {
-        if (currentIndexRoundTwo < lettersRoundTwo.length) {
-          const expected = lettersRoundTwo[currentIndexRoundTwo].dataset.letter;
-          if (expected === event.key) {
-            lettersRoundTwo[currentIndexRoundTwo].style.visibility = 'visible';
-            lettersRoundTwo[currentIndexRoundTwo].style.color = 'black';
-            currentIndexRoundTwo++;
-            if (currentIndexRoundTwo >= lettersRoundTwo.length) {
-              setTimeout(() => {
-                poemContainer.innerHTML = '';
-                startHeartAnimation(3333, () => {
-                  currentRound = 3;
-                  createRoundThreeDisplay();
-                });
-              }, 500);
-            }
-          }
-        }
-      } else if (currentRound === 3) {
-        if (currentIndexRoundThree < lettersRoundThree.length) {
-          const expected = lettersRoundThree[currentIndexRoundThree].dataset.letter;
-          if (expected === event.key) {
-            lettersRoundThree[currentIndexRoundThree].style.visibility = 'visible';
-            lettersRoundThree[currentIndexRoundThree].style.color = 'black';
-            currentIndexRoundThree++;
-            if (currentIndexRoundThree >= lettersRoundThree.length) {
-              setTimeout(() => {
-                poemContainer.innerHTML = '';
-                startHeartAnimation(3333, () => {
-                  currentRound = 4;
-                  createRoundFourDisplay();
-                });
-              }, 500);
-            }
-          }
-        }
-      } else if (currentRound === 4) {
-        if (currentIndexRoundFour < lettersRoundFour.length) {
-          const expected = lettersRoundFour[currentIndexRoundFour].dataset.letter;
-          if (expected === event.key) {
-            lettersRoundFour[currentIndexRoundFour].style.visibility = 'visible';
-            lettersRoundFour[currentIndexRoundFour].style.color = 'black';
-            currentIndexRoundFour++;
-            if (currentIndexRoundFour >= lettersRoundFour.length) {
-              setTimeout(() => {
-                document.querySelector('h1').innerHTML = '';
-                poemContainer.innerHTML = '';
-                document.body.style.backgroundColor = '#CC004D';
-                document.getElementById('helpButton').style.display = 'none';
-                const messageDiv = document.createElement('div');
-                messageDiv.style.position = 'absolute';
-                messageDiv.style.top = '50%';
-                messageDiv.style.left = '50%';
-                messageDiv.style.transform = 'translate(-50%, -50%)';
-                messageDiv.style.fontSize = '2rem';
-                messageDiv.style.fontWeight = 'bold';
-                messageDiv.style.textAlign = 'center';
-                messageDiv.style.color = 'black';
-                messageDiv.textContent = 'now recite this poem to your lover!';
-                document.body.appendChild(messageDiv);
-              }, 500);
-            }
-          }
-        }
-      }
-    });
-    
-    // -----------------------------
-    // Footer Button Handlers
-    // -----------------------------
-    const backButton = document.getElementById('backButton');
-    const aboutButton = document.getElementById('aboutButton');
-    const helpButton = document.getElementById('helpButton');
-    backButton.addEventListener('click', function() {
-      window.location.href = 'index.html';
-    });
-    aboutButton.addEventListener('click', function() {
-      window.location.href = 'aboutSC.html';
-    });
-    
-    // -----------------------------
-    // Mobile Adaptation for Help Button Touch Events
-    // -----------------------------
-    if (isMobile) {
-      helpButton.removeEventListener('mouseenter', helpReveal);
-      helpButton.removeEventListener('mouseleave', helpHide);
-      helpButton.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        helpReveal();
-        helpButton.style.color = '#CC004D';  // set text to pink on touchstart
-      });
-      helpButton.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        helpHide();
-        helpButton.style.color = 'white';    // revert text to white on touchend
-      });
-    }
-    
-    // -----------------------------
-    // Start the Game with Round 1
-    // -----------------------------
-    createRoundOneDisplay();
-  </script>
-</body>
-</html>
+          if (expected =
