@@ -120,6 +120,11 @@
           if (document.activeElement !== mobileInput) {
             mobileInput.focus();
           }
+          if (!isMobile) {
+  helpButton.addEventListener('mouseenter', helpReveal);
+  helpButton.addEventListener('mouseleave', helpHide);
+}
+
         }
       });
     }
