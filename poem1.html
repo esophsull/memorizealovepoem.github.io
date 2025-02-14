@@ -24,12 +24,12 @@
       font-size: 2rem;
       margin-bottom: 10px;
     }
-    /* Instructional note style */
+    /* Instructional note */
     h2.instruction {
       font-size: 1.5rem;
       margin-top: 0;
       margin-bottom: 20px;
-      color: #CC004D; /* a darker gray so it stands out */
+      color: #555;
     }
     #poemContainer {
       user-select: none;
@@ -70,6 +70,12 @@
       padding: 10px 20px;
     }
     footer button:hover {
+      background-color: #CC004D;
+      color: white;
+    }
+    /* Override Help button style so that on hover/tap it only changes text color */
+    #helpButton:hover, #helpButton:active {
+      background-color: transparent;
       color: #CC004D;
     }
     /* Responsive CSS */
@@ -105,14 +111,14 @@
     // Detect if the device is mobile.
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     
-    // One-time touch listener to focus the hidden input (trigger on-screen keyboard)
+    // Always ensure that on every touchstart the mobile input is focused
     if (isMobile) {
-      const mobileInput = document.getElementById("mobileInput");
-      const focusInput = () => {
-        mobileInput.focus();
-        document.removeEventListener('touchstart', focusInput);
-      };
-      document.addEventListener('touchstart', focusInput);
+      document.addEventListener('touchstart', function(e) {
+        const mobileInput = document.getElementById("mobileInput");
+        if (document.activeElement !== mobileInput) {
+          mobileInput.focus();
+        }
+      });
     }
     
     // -----------------------------
@@ -173,7 +179,7 @@ on the Kilpatrick hills`,
       if (instr) {
         instr.remove();
       }
-      // Remove this listener after first key press.
+      // Remove this listener after the first key press.
       document.removeEventListener('keydown', removeInstruction);
     });
     
@@ -577,10 +583,12 @@ on the Kilpatrick hills`,
       helpButton.addEventListener('touchstart', function(e) {
         e.preventDefault();
         helpReveal();
+        helpButton.style.color = '#CC004D';  // set to pink on touchstart
       });
       helpButton.addEventListener('touchend', function(e) {
         e.preventDefault();
         helpHide();
+        helpButton.style.color = 'white';  // revert to white on touchend
       });
     }
     
@@ -591,5 +599,6 @@ on the Kilpatrick hills`,
   </script>
 </body>
 </html>
+
 
 
