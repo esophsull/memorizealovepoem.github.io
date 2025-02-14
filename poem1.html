@@ -94,11 +94,18 @@
   </footer>
   
   <script>
-    // Detect if device is mobile.
+    // Detect if the device is mobile.
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    
+    // One-time touch listener to focus the hidden input.
     if (isMobile) {
-      // Auto-focus the hidden input so that the on-screen keyboard appears.
-      document.getElementById("mobileInput").focus();
+      const mobileInput = document.getElementById("mobileInput");
+      const focusInput = () => {
+        mobileInput.focus();
+        // Remove this event listener after the first touch.
+        document.removeEventListener('touchstart', focusInput);
+      };
+      document.addEventListener('touchstart', focusInput);
     }
     
     // -----------------------------
@@ -245,7 +252,6 @@ on the Kilpatrick hills`,
     
     // -----------------------------
     // Round 4: Only the First Alphabetic Letter of the Entire Poem Visible
-    // (All other alphabetic letters are hidden; punctuation and spaces remain visible.)
     // -----------------------------
     function createRoundFourDisplay() {
       poemContainer.innerHTML = '';
@@ -280,7 +286,7 @@ on the Kilpatrick hills`,
     }
     
     // -----------------------------
-    // Heart Animation (for Rounds 1–3 only)
+    // Heart Animation (Rounds 1–3)
     // -----------------------------
     function startHeartAnimation(duration, callback) {
       if (!duration) duration = 5000;
@@ -414,7 +420,7 @@ on the Kilpatrick hills`,
         });
         currentIndexRoundFour = lettersRoundFour.length;
         setTimeout(() => {
-          // Finalize Round 4: clear display and show final message.
+          // Finalize Round 4: Clear display and show final message.
           document.querySelector('h1').innerHTML = '';
           poemContainer.innerHTML = '';
           document.body.style.backgroundColor = '#CC004D';
@@ -531,27 +537,11 @@ on the Kilpatrick hills`,
     });
     
     // -----------------------------
-    // Mobile Adaptation for Help Button Touch Events
-    // -----------------------------
-    const helpBtn = document.getElementById("helpButton");
-    if (isMobile) {
-      helpBtn.removeEventListener('mouseenter', helpReveal);
-      helpBtn.removeEventListener('mouseleave', helpHide);
-      helpBtn.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        helpReveal();
-      });
-      helpBtn.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        helpHide();
-      });
-    }
-    
-    // -----------------------------
     // Footer Button Handlers
     // -----------------------------
     const backButton = document.getElementById('backButton');
     const aboutButton = document.getElementById('aboutButton');
+    const helpButton = document.getElementById('helpButton');
     backButton.addEventListener('click', function() {
       window.location.href = 'index.html';
     });
@@ -559,8 +549,27 @@ on the Kilpatrick hills`,
       window.location.href = 'aboutGDJ.html';
     });
     
-    // Start the game with Round 1
+    // -----------------------------
+    // Mobile Adaptation for Help Button Touch Events
+    // -----------------------------
+    if (isMobile) {
+      helpButton.removeEventListener('mouseenter', helpReveal);
+      helpButton.removeEventListener('mouseleave', helpHide);
+      helpButton.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        helpReveal();
+      });
+      helpButton.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        helpHide();
+      });
+    }
+    
+    // -----------------------------
+    // Start the Game with Round 1
+    // -----------------------------
     createRoundOneDisplay();
   </script>
 </body>
 </html>
+
